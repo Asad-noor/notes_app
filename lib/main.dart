@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'home.dart';
+import 'package:notes_app/home.dart';
 
 void main() {
   runApp(const MaterialApp(
-      home: Home()
+    home: Home(),
   ));
 }
 
