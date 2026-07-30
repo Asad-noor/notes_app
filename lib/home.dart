@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/coffee_prefs.dart';
+import 'package:notes_app/posts_screen.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -35,6 +36,15 @@ class Home extends StatelessWidget {
                   )
               )
           ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.brown[700],
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const PostsScreen()),
+          );
+        },
+        child: const Icon(Icons.list, color: Colors.white),
       ),
     );
   }
