@@ -38,14 +38,28 @@ class _PostsScreenState extends State<PostsScreen> {
     final response =
         await _dio.get('https://jsonplaceholder.typicode.com/posts');
     final data = response.data as List;
-    return data.map((json) => Post.fromJson(json)).toList();
+    return data
+        .map((json) => Post.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
   Future<void> _refresh() async {
+    final future = _fetchPosts();
     setState(() {
-      _postsFuture = _fetchPosts();
+      _postsFuture = future;
     });
-    await _postsFuture;
+    try {
+      await future;
+    } catch (_) {
+      // The FutureBuilder renders the error state; swallowing it here keeps
+      // the RefreshIndicator and Retry button from throwing uncaught.
+    }
+  }
+
+  @override
+  void dispose() {
+    _dio.close();
+    super.dispose();
   }
 
   @override
@@ -90,6 +104,9 @@ class _PostsScreenState extends State<PostsScreen> {
           return RefreshIndicator(
             onRefresh: _refresh,
             child: ListView.separated(
+              // Keeps pull-to-refresh working when the list is empty or
+              // shorter than the viewport.
+              physics: const AlwaysScrollableScrollPhysics(),
               itemCount: posts.length,
               separatorBuilder: (context, index) => const Divider(height: 1),
               itemBuilder: (context, index) {

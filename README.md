@@ -202,9 +202,15 @@ Declared in `pubspec.yaml` under `flutter.assets`:
 
 ## Testing
 
-`test/widget_test.dart` is the default Flutter counter smoke test with its body
-commented out, so `flutter test` currently passes without asserting anything.
-Any real coverage still needs to be written.
+`test/widget_test.dart` covers the `CoffeePrefs` counters:
+
+- **strength counter increments and wraps at 5** — asserts the bean count grows
+  per tap and wraps back to 1 after 5.
+- **sugars wrap to zero and show the empty label** — asserts the "No Sugars.."
+  label appears once sugars wrap past 5 to 0.
+
+Both pass under `flutter test`. `PostsScreen` has no coverage — testing it
+would need the `dio` call stubbed behind an injectable client.
 
 ---
 
@@ -221,7 +227,8 @@ Tracked here so they are not mistaken for finished behaviour:
 - No app theme; colours are repeated inline across widgets.
 - No error typing or timeout handling around the `dio` call — any failure
   surfaces as a raw `toString()` of the exception.
-- The widget test asserts nothing.
+- `PostsScreen` is untested; the `Dio` instance is constructed inside the
+  state, so it cannot be stubbed without refactoring.
 
 ---
 
